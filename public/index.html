@@ -7,203 +7,286 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Trading Desk</p>
-        <h1>股票视频整理台</h1>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#overview" aria-label="股票视频整理台">
+          <span class="brand-mark">股</span>
+          <span>
+            <strong>股票视频整理台</strong>
+            <small>Stock Desk</small>
+          </span>
+        </a>
+
+        <nav class="nav" aria-label="主菜单">
+          <a class="nav-link active" href="#overview" data-section="overview">
+            <span class="nav-icon">总</span>
+            <span>总览</span>
+          </a>
+          <a class="nav-link" href="#uploads" data-section="uploads">
+            <span class="nav-icon">传</span>
+            <span>资料导入</span>
+          </a>
+          <a class="nav-link" href="#summaries" data-section="summaries">
+            <span class="nav-icon">摘</span>
+            <span>视频摘要</span>
+          </a>
+          <a class="nav-link" href="#watchlist" data-section="watchlist">
+            <span class="nav-icon">池</span>
+            <span>股票池</span>
+          </a>
+          <a class="nav-link" href="#stockForm" data-section="stockForm">
+            <span class="nav-icon">参</span>
+            <span>参数录入</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-card">
+          <span>本地 Agent</span>
+          <strong>待接入分析</strong>
+          <p>上传资料后，本机分析程序会把结果同步到云端。</p>
+        </div>
+      </aside>
+
+      <div class="content-shell">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Trading Intelligence</p>
+            <h1>每日资料、股票池和实时行情</h1>
+          </div>
+          <div class="actions">
+            <button id="refreshQuotes" class="primary" type="button">刷新行情</button>
+            <button id="reloadData" type="button">重新载入</button>
+            <button id="logout" type="button">退出</button>
+          </div>
+        </header>
+
+        <main>
+          <section id="overview" class="hero-panel">
+            <div class="hero-copy">
+              <p class="eyebrow">Today's Desk</p>
+              <h2>把每天收到的鱼池、视频和截图变成可跟踪的交易清单。</h2>
+              <p>先收资料，再提取观点和股票参数，最后在股票池里看实时涨跌、买入区间、止损和目标。</p>
+            </div>
+            <div class="market-status">
+              <span id="quoteMessage">东方财富接口；刷新失败时保留本地数据</span>
+            </div>
+          </section>
+
+          <section class="metrics" aria-label="overview">
+            <article>
+              <span>股票池</span>
+              <strong id="stockCount">0</strong>
+              <small>只跟踪标的</small>
+            </article>
+            <article>
+              <span>待整理</span>
+              <strong id="pendingCount">0</strong>
+              <small>条摘要线索</small>
+            </article>
+            <article>
+              <span>资料库</span>
+              <strong id="uploadCount">0 个文件</strong>
+              <small>PDF / 图片 / 视频</small>
+            </article>
+            <article>
+              <span>最新刷新</span>
+              <strong id="lastUpdated">--</strong>
+              <small>行情更新时间</small>
+            </article>
+          </section>
+
+          <section id="uploads" class="dashboard-grid two-col">
+            <form id="uploadForm" class="panel form-grid upload-panel">
+              <div class="panel-title wide">
+                <div>
+                  <p class="section-kicker">Import</p>
+                  <h2>上传资料</h2>
+                </div>
+                <span>PDF / 图片 / 视频</span>
+              </div>
+              <label>
+                标题
+                <input name="title" placeholder="例如：6月11日鱼池 / 午评截图" />
+              </label>
+              <label>
+                文件
+                <input id="uploadFile" name="file" type="file" accept=".pdf,image/*,video/*" required />
+              </label>
+              <label class="wide">
+                备注
+                <textarea name="note" rows="3" placeholder="来源、需要关注的主题、手工补充说明"></textarea>
+              </label>
+              <button class="primary wide" type="submit">上传到云端</button>
+              <p id="uploadMessage" class="form-message wide"></p>
+            </form>
+
+            <div class="panel">
+              <div class="panel-title">
+                <div>
+                  <p class="section-kicker">Library</p>
+                  <h2>资料库</h2>
+                </div>
+                <span id="uploadCountInline">0 个文件</span>
+              </div>
+              <div id="uploadList" class="upload-list"></div>
+            </div>
+          </section>
+
+          <section id="summaries" class="dashboard-grid two-col">
+            <div class="panel">
+              <div class="panel-title">
+                <div>
+                  <p class="section-kicker">Briefing</p>
+                  <h2>视频关键内容</h2>
+                </div>
+                <span id="summaryStatus">--</span>
+              </div>
+              <div id="summaryList" class="summary-list"></div>
+            </div>
+
+            <form id="summaryForm" class="panel form-grid">
+              <div class="panel-title wide">
+                <div>
+                  <p class="section-kicker">Capture</p>
+                  <h2>新增/更新摘要</h2>
+                </div>
+              </div>
+              <label>
+                日期
+                <input name="date" type="date" />
+              </label>
+              <label>
+                标题
+                <input name="title" placeholder="例如：2026-06-11 晚间复盘" />
+              </label>
+              <label class="wide">
+                视频/来源路径
+                <input name="source" placeholder="本地视频路径、链接或备注" />
+              </label>
+              <label class="wide">
+                市场观点
+                <textarea name="marketView" rows="3" placeholder="大盘方向、情绪、主线板块"></textarea>
+              </label>
+              <label class="wide">
+                关键内容
+                <textarea name="keyPoints" rows="4" placeholder="粘贴字幕、口播重点或截图文字"></textarea>
+              </label>
+              <label class="wide">
+                今日动作
+                <textarea name="actionItems" rows="3" placeholder="明天观察、买卖计划、风险条件"></textarea>
+              </label>
+              <button class="primary wide" type="submit">保存摘要</button>
+            </form>
+          </section>
+
+          <section id="watchlist" class="panel watchlist-panel">
+            <div class="panel-title">
+              <div>
+                <p class="section-kicker">Realtime</p>
+                <h2>股票池实时信息</h2>
+              </div>
+              <span>现价、涨跌、交易计划一屏扫完</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>代码</th>
+                    <th>名称</th>
+                    <th>现价</th>
+                    <th>涨跌幅</th>
+                    <th>成交额</th>
+                    <th>换手</th>
+                    <th>买入区间</th>
+                    <th>止损</th>
+                    <th>目标</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="stockRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <form id="stockForm" class="panel stock-form">
+            <div class="panel-title wide">
+              <div>
+                <p class="section-kicker">Parameters</p>
+                <h2>关键参数录入</h2>
+              </div>
+              <span>维护每只票的交易计划</span>
+            </div>
+            <input type="hidden" name="id" />
+            <label>
+              代码
+              <input name="code" required pattern="[0-9]{6}" placeholder="000001" />
+            </label>
+            <label>
+              名称
+              <input name="name" required placeholder="股票名称" />
+            </label>
+            <label>
+              市场
+              <select name="market">
+                <option value="SZ">深市</option>
+                <option value="SH">沪市</option>
+                <option value="BJ">北交所</option>
+              </select>
+            </label>
+            <label>
+              板块
+              <input name="sector" placeholder="机器人 / 半导体 / 银行" />
+            </label>
+            <label>
+              买入区间
+              <input name="buyZone" placeholder="例如：10.20-10.60" />
+            </label>
+            <label>
+              止损
+              <input name="stopLoss" placeholder="例如：跌破 9.80" />
+            </label>
+            <label>
+              目标
+              <input name="target" placeholder="例如：12.00 / 前高" />
+            </label>
+            <label>
+              状态
+              <select name="status">
+                <option>观察</option>
+                <option>待买</option>
+                <option>持有</option>
+                <option>止盈</option>
+                <option>止损</option>
+              </select>
+            </label>
+            <label class="wide">
+              入池逻辑
+              <textarea name="reason" rows="3" placeholder="视频提到的逻辑、催化、形态、资金线索"></textarea>
+            </label>
+            <label>
+              仓位计划
+              <input name="positionPlan" placeholder="例如：1成试仓，回踩加仓" />
+            </label>
+            <label>
+              风险
+              <input name="risk" placeholder="例如：板块退潮 / 跌破均线" />
+            </label>
+            <button class="primary wide" type="submit">保存股票</button>
+          </form>
+        </main>
       </div>
-      <div class="actions">
-        <button id="refreshQuotes" class="primary" type="button">刷新行情</button>
-        <button id="reloadData" type="button">重新载入</button>
-        <button id="logout" type="button">退出</button>
-      </div>
-    </header>
-
-    <main>
-      <section class="metrics" aria-label="overview">
-        <article>
-          <span>股票池</span>
-          <strong id="stockCount">0</strong>
-        </article>
-        <article>
-          <span>待整理视频</span>
-          <strong id="pendingCount">0</strong>
-        </article>
-        <article>
-          <span>最新刷新</span>
-          <strong id="lastUpdated">--</strong>
-        </article>
-      </section>
-
-      <section class="workspace">
-        <div class="panel">
-          <div class="panel-title">
-            <h2>视频关键内容</h2>
-            <span id="summaryStatus">--</span>
-          </div>
-          <div id="summaryList" class="summary-list"></div>
-        </div>
-
-        <form id="summaryForm" class="panel form-grid">
-          <div class="panel-title">
-            <h2>新增/更新视频摘要</h2>
-          </div>
-          <label>
-            日期
-            <input name="date" type="date" />
-          </label>
-          <label>
-            标题
-            <input name="title" placeholder="例如：2026-06-11 晚间复盘" />
-          </label>
-          <label class="wide">
-            视频/来源路径
-            <input name="source" placeholder="本地视频路径、链接或备注" />
-          </label>
-          <label class="wide">
-            市场观点
-            <textarea name="marketView" rows="3" placeholder="大盘方向、情绪、主线板块"></textarea>
-          </label>
-          <label class="wide">
-            关键内容
-            <textarea name="keyPoints" rows="4" placeholder="粘贴字幕、口播重点或截图文字"></textarea>
-          </label>
-          <label class="wide">
-            今日动作
-            <textarea name="actionItems" rows="3" placeholder="明天观察、买卖计划、风险条件"></textarea>
-          </label>
-          <button class="primary wide" type="submit">保存摘要</button>
-        </form>
-      </section>
-
-      <section class="workspace uploads-workspace">
-        <form id="uploadForm" class="panel form-grid">
-          <div class="panel-title wide">
-            <h2>上传资料</h2>
-            <span>PDF / 图片 / 视频</span>
-          </div>
-          <label>
-            标题
-            <input name="title" placeholder="例如：6月11日鱼池 / 午评截图" />
-          </label>
-          <label>
-            文件
-            <input name="file" type="file" accept=".pdf,image/*,video/*" required />
-          </label>
-          <label class="wide">
-            备注
-            <textarea name="note" rows="3" placeholder="来源、需要关注的主题、手工补充说明"></textarea>
-          </label>
-          <button class="primary wide" type="submit">上传到云端</button>
-          <p id="uploadMessage" class="form-message wide"></p>
-        </form>
-
-        <div class="panel">
-          <div class="panel-title">
-            <h2>资料库</h2>
-            <span id="uploadCount">0 个文件</span>
-          </div>
-          <div id="uploadList" class="upload-list"></div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-title">
-          <h2>股票池实时信息</h2>
-          <span id="quoteMessage">东方财富接口；刷新失败时保留本地数据</span>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>代码</th>
-                <th>名称</th>
-                <th>现价</th>
-                <th>涨跌幅</th>
-                <th>成交额</th>
-                <th>换手</th>
-                <th>买入区间</th>
-                <th>止损</th>
-                <th>目标</th>
-                <th>状态</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="stockRows"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <form id="stockForm" class="panel stock-form">
-        <div class="panel-title">
-          <h2>关键参数录入</h2>
-        </div>
-        <input type="hidden" name="id" />
-        <label>
-          代码
-          <input name="code" required pattern="[0-9]{6}" placeholder="000001" />
-        </label>
-        <label>
-          名称
-          <input name="name" required placeholder="股票名称" />
-        </label>
-        <label>
-          市场
-          <select name="market">
-            <option value="SZ">深市</option>
-            <option value="SH">沪市</option>
-            <option value="BJ">北交所</option>
-          </select>
-        </label>
-        <label>
-          板块
-          <input name="sector" placeholder="机器人 / 半导体 / 银行" />
-        </label>
-        <label>
-          买入区间
-          <input name="buyZone" placeholder="例如：10.20-10.60" />
-        </label>
-        <label>
-          止损
-          <input name="stopLoss" placeholder="例如：跌破 9.80" />
-        </label>
-        <label>
-          目标
-          <input name="target" placeholder="例如：12.00 / 前高" />
-        </label>
-        <label>
-          状态
-          <select name="status">
-            <option>观察</option>
-            <option>待买</option>
-            <option>持有</option>
-            <option>止盈</option>
-            <option>止损</option>
-          </select>
-        </label>
-        <label class="wide">
-          入池逻辑
-          <textarea name="reason" rows="3" placeholder="视频提到的逻辑、催化、形态、资金线索"></textarea>
-        </label>
-        <label>
-          仓位计划
-          <input name="positionPlan" placeholder="例如：1成试仓，回踩加仓" />
-        </label>
-        <label>
-          风险
-          <input name="risk" placeholder="例如：板块退潮 / 跌破均线" />
-        </label>
-        <button class="primary wide" type="submit">保存股票</button>
-      </form>
-    </main>
+    </div>
 
     <template id="summaryTemplate">
       <article class="summary-item">
-        <div>
-          <h3></h3>
-          <p class="source"></p>
+        <div class="summary-head">
+          <div>
+            <h3></h3>
+            <p class="source"></p>
+          </div>
+          <span class="badge"></span>
         </div>
-        <span class="badge"></span>
         <dl>
           <dt>市场观点</dt>
           <dd class="market"></dd>

@@ -11,6 +11,7 @@ server.out.log
 server.err.log
 
 data/uploads/
+data/uploads.json
 __pycache__/
 .DS_Store
 Thumbs.db

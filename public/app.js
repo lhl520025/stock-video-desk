@@ -55,6 +55,7 @@ function renderMetrics() {
   $("#lastUpdated").textContent = quoteTimes.length ? new Date(quoteTimes.at(-1)).toLocaleTimeString("zh-CN") : "--";
   $("#summaryStatus").textContent = `${state.summaries.length} 条记录`;
   $("#uploadCount").textContent = `${state.uploads.length} 个文件`;
+  $("#uploadCountInline").textContent = `${state.uploads.length} 个文件`;
 }
 
 function renderSummaries() {
@@ -103,6 +104,34 @@ function renderUploads() {
     `;
     list.appendChild(item);
   }
+}
+
+function setActiveNav(sectionId) {
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    link.classList.toggle("active", link.dataset.section === sectionId);
+  });
+}
+
+function setupNavigation() {
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    link.addEventListener("click", () => setActiveNav(link.dataset.section));
+  });
+
+  const sections = ["overview", "uploads", "summaries", "watchlist", "stockForm"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setActiveNav(visible.target.id);
+    },
+    { rootMargin: "-20% 0px -65% 0px", threshold: [0.1, 0.35, 0.6] },
+  );
+
+  sections.forEach((section) => observer.observe(section));
 }
 
 function renderStocks() {
@@ -255,6 +284,8 @@ $("#logout").addEventListener("click", async () => {
   await api("/api/logout", { method: "POST" });
   window.location.href = "/login.html";
 });
+
+setupNavigation();
 
 loadData().catch((error) => {
   document.body.innerHTML = `<main><section class="panel"><h1>加载失败</h1><p>${error.message}</p></section></main>`;

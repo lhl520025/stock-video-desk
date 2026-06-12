@@ -7,8 +7,8 @@
     <style>
       :root {
         font-family: "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
-        color: #17212b;
-        background: #0f2f4a;
+        color: #14202b;
+        background: #101923;
       }
 
       * {
@@ -16,58 +16,104 @@
       }
 
       body {
-        display: grid;
+        min-width: 320px;
         min-height: 100vh;
         margin: 0;
-        place-items: center;
         background:
-          linear-gradient(90deg, rgba(9, 25, 39, 0.72), rgba(9, 25, 39, 0.18)),
+          linear-gradient(90deg, rgba(11, 20, 31, 0.9), rgba(11, 20, 31, 0.48) 52%, rgba(11, 20, 31, 0.18)),
           url("/login-bg.svg") center / cover no-repeat;
       }
 
       .shell {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 420px;
-        gap: 48px;
+        min-height: 100vh;
+        grid-template-columns: minmax(0, 1fr) 430px;
+        gap: 52px;
         align-items: center;
-        width: min(1060px, calc(100% - 32px));
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 38px 0;
       }
 
       .copy {
         color: #fff;
       }
 
-      .copy span {
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 32px;
+      }
+
+      .brand-mark {
+        display: inline-grid;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border-radius: 8px;
+        background: #fff;
+        color: #101923;
+        font-weight: 900;
+      }
+
+      .copy span.kicker {
         display: inline-flex;
         margin-bottom: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.32);
+        border: 1px solid rgba(255, 255, 255, 0.28);
         border-radius: 999px;
         padding: 6px 12px;
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.1);
         font-size: 13px;
+        font-weight: 700;
       }
 
       h1 {
+        max-width: 720px;
         margin: 0;
-        font-size: 44px;
-        line-height: 1.16;
+        font-size: 46px;
+        line-height: 1.14;
       }
 
       .copy p {
-        max-width: 560px;
+        max-width: 610px;
         margin: 18px 0 0;
-        color: rgba(255, 255, 255, 0.78);
+        color: rgba(255, 255, 255, 0.76);
         font-size: 16px;
-        line-height: 1.8;
+        line-height: 1.85;
+      }
+
+      .signals {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        max-width: 620px;
+        margin-top: 30px;
+      }
+
+      .signals div {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 12px;
+      }
+
+      .signals strong {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .signals small {
+        color: rgba(255, 255, 255, 0.58);
       }
 
       form {
         border: 1px solid rgba(255, 255, 255, 0.6);
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.92);
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
         padding: 30px;
-        backdrop-filter: blur(16px);
+        backdrop-filter: blur(18px);
       }
 
       form h2 {
@@ -76,54 +122,69 @@
       }
 
       form p {
-        margin: 0 0 22px;
-        color: #647280;
+        margin: 0 0 24px;
+        color: #657281;
+        line-height: 1.6;
       }
 
       label {
         display: grid;
         gap: 8px;
-        color: #647280;
+        color: #657281;
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 800;
       }
 
       input {
-        min-height: 44px;
-        border: 1px solid #d9e0e7;
-        border-radius: 6px;
+        min-height: 46px;
+        border: 1px solid #dce3ea;
+        border-radius: 7px;
         padding: 9px 11px;
         font: inherit;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: #1769aa;
+        box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.12);
       }
 
       button {
         width: 100%;
-        min-height: 44px;
+        min-height: 46px;
         margin-top: 18px;
-        border: 1px solid #0b6bcb;
-        border-radius: 6px;
-        background: #0b6bcb;
+        border: 1px solid #1769aa;
+        border-radius: 7px;
+        background: #1769aa;
         color: #fff;
         font: inherit;
-        font-weight: 700;
+        font-weight: 800;
         cursor: pointer;
+      }
+
+      button:hover {
+        background: #0c4e86;
       }
 
       .error {
         min-height: 20px;
         margin-top: 12px;
-        color: #c83737;
+        color: #c43d3d;
         font-size: 13px;
       }
 
-      @media (max-width: 840px) {
+      @media (max-width: 880px) {
         .shell {
           grid-template-columns: 1fr;
-          gap: 24px;
+          gap: 26px;
         }
 
         h1 {
           font-size: 34px;
+        }
+
+        .signals {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -131,15 +192,34 @@
   <body>
     <main class="shell">
       <section class="copy">
-        <span>Trading Intelligence</span>
-        <h1>股票视频整理台</h1>
-        <p>把每天收到的 PDF、图片和视频资料整理成股票池、买入区间、风险纪律和实时行情看板。</p>
+        <div class="brand">
+          <span class="brand-mark">股</span>
+          <strong>Stock Video Desk</strong>
+        </div>
+        <span class="kicker">Trading Intelligence</span>
+        <h1>把每天收到的资料，整理成能执行的股票池。</h1>
+        <p>上传 PDF、截图和视频，沉淀市场观点、入池逻辑、买入区间、止损目标，并在同一个看板里跟踪实时涨跌。</p>
+        <div class="signals">
+          <div>
+            <strong>资料导入</strong>
+            <small>PDF / 图片 / 视频</small>
+          </div>
+          <div>
+            <strong>AI 分析</strong>
+            <small>本机分析后同步</small>
+          </div>
+          <div>
+            <strong>行情看板</strong>
+            <small>东方财富公开行情</small>
+          </div>
+        </div>
       </section>
+
       <form id="loginForm">
-        <h2>登录</h2>
-        <p>请输入访问密码</p>
+        <h2>登录工作台</h2>
+        <p>请输入访问密码进入股票视频整理系统。</p>
         <label>
-          密码
+          访问密码
           <input name="password" type="password" autocomplete="current-password" autofocus required />
         </label>
         <button type="submit">进入系统</button>
