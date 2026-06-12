@@ -1,0 +1,44 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: stock-desk-mysql
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-stock_desk}
+      - MYSQL_USER=${MYSQL_USER:-stock_user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-stock_password}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root_password}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  stock-desk:
+    build: .
+    container_name: stock-desk
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "80:5173"
+    environment:
+      - NODE_ENV=production
+      - PORT=5173
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+      - SESSION_SECRET=${SESSION_SECRET:-dev-session-secret}
+      - LOCAL_AGENT_TOKEN=${LOCAL_AGENT_TOKEN:-}
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=${MYSQL_USER:-stock_user}
+      - DB_PASSWORD=${MYSQL_PASSWORD:-stock_password}
+      - DB_DATABASE=${MYSQL_DATABASE:-stock_desk}
+    volumes:
+      - ./data:/app/data
+
+volumes:
+  mysql_data:
